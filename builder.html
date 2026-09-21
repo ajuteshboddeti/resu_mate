@@ -109,6 +109,7 @@ function update() {
   doc.getElementById('p3stack').innerText = document.getElementById('p3stack').value || 'Tech Stack';
   doc.getElementById('p3desc').innerText = document.getElementById('p3desc').value || 'Description';
 
+  // creative uses <br>, others use |
   if (isCreative) {
     doc.getElementById('contact').innerHTML = email + '<br>' + phone + '<br>' + linkedin + '<br>' + github;
     doc.getElementById('skills').innerHTML = skills.split(',').map(s => s.trim()).join('<br>');
@@ -119,6 +120,7 @@ function update() {
     doc.getElementById('skills').innerText = skills;
     doc.getElementById('cname').innerText = cname;
     doc.getElementById('education').innerText = degree + ' | ' + year + ' | ' + cgpa;
+    // professional has separate cgpa id
     if (doc.getElementById('cgpa')) {
       doc.getElementById('cgpa').innerText = 'CGPA: ' + cgpa;
     }
@@ -130,16 +132,17 @@ function switchTpl(file) {
   frame.src = file;
   frame.onload = function() { update(); }
 }
+// finds the white "paper" div of a template, so the grey background around it is left out
 function findResumePage(doc) {
   const els = ['name', 'contact', 'profile', 'education', 'skills', 'p1name', 'exdesc']
     .map(id => doc.getElementById(id))
     .filter(Boolean);
   if (!els.length) return doc.body;
 
-  let common = els[0];
+  let common = els[0]; // smallest element that contains all the resume fields
   while (common !== doc.body && !els.every(el => common.contains(el))) common = common.parentElement;
 
-  const hasBg = el => {
+  const hasBg = el => { // the first ancestor with a background colour is the "paper"
     const c = doc.defaultView.getComputedStyle(el).backgroundColor;
     return c !== 'transparent' && c !== 'rgba(0, 0, 0, 0)';
   };
@@ -154,6 +157,7 @@ async function printResume() {
     const win = frame.contentWindow;
     const doc = frame.contentDocument;
 
+    // load html2canvas inside the preview so it draws with the template's own fonts
     if (!win.html2canvas) {
       await new Promise((ok, fail) => {
         const s = doc.createElement('script');
@@ -166,46 +170,15 @@ async function printResume() {
     await doc.fonts.ready;
     win.scrollTo(0, 0);
 
-    const targetEl = findResumePage(doc);
-
-    const canvas = await win.html2canvas(targetEl, {
+    const canvas = await win.html2canvas(findResumePage(doc), {
       scale: 3,
-      windowWidth: 900,
-      windowHeight: 1200,
       onclone: (cdoc, cpage) => {
-        cdoc.documentElement.style.width = '900px';
-        cdoc.body.style.width = '900px';
-
-        cpage.style.width = '800px';
-        cpage.style.minWidth = '800px';
-        cpage.style.maxWidth = '800px';
-        cpage.style.margin = '0 auto';
-        cpage.style.boxSizing = 'border-box';
-
-        const resume = cdoc.querySelector('.resume') || cpage;
-        resume.style.width = '800px';
-        resume.style.minWidth = '800px';
-        resume.style.maxWidth = '800px';
-        resume.style.display = 'flex';
-        resume.style.flexDirection = 'row';
-
-        const aside = cdoc.querySelector('aside');
-        if (aside) {
-          aside.style.width = '30%';
-          aside.style.padding = '35px';
-          aside.style.boxSizing = 'border-box';
-        }
-        const main = cdoc.querySelector('main');
-        if (main) {
-          main.style.width = '70%';
-          main.style.padding = '40px';
-          main.style.boxSizing = 'border-box';
-        }
-
+        // switch off the preview's scale/zoom in the hidden copy only
         const nodes = [cdoc.documentElement, cdoc.body];
         for (let n = cpage; n && n !== cdoc.body; n = n.parentElement) nodes.push(n);
         nodes.forEach(n => {
           n.style.setProperty('transform', 'none', 'important');
+          n.style.setProperty('zoom', '1', 'important');
         });
       }
     });
