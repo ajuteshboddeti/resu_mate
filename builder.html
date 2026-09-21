@@ -166,14 +166,46 @@ async function printResume() {
     await doc.fonts.ready;
     win.scrollTo(0, 0);
 
-    const canvas = await win.html2canvas(findResumePage(doc), {
+    const targetEl = findResumePage(doc);
+
+    const canvas = await win.html2canvas(targetEl, {
       scale: 3,
+      windowWidth: 900,
+      windowHeight: 1200,
       onclone: (cdoc, cpage) => {
+        cdoc.documentElement.style.width = '900px';
+        cdoc.body.style.width = '900px';
+
+        cpage.style.width = '800px';
+        cpage.style.minWidth = '800px';
+        cpage.style.maxWidth = '800px';
+        cpage.style.margin = '0 auto';
+        cpage.style.boxSizing = 'border-box';
+
+        const resume = cdoc.querySelector('.resume') || cpage;
+        resume.style.width = '800px';
+        resume.style.minWidth = '800px';
+        resume.style.maxWidth = '800px';
+        resume.style.display = 'flex';
+        resume.style.flexDirection = 'row';
+
+        const aside = cdoc.querySelector('aside');
+        if (aside) {
+          aside.style.width = '30%';
+          aside.style.padding = '35px';
+          aside.style.boxSizing = 'border-box';
+        }
+        const main = cdoc.querySelector('main');
+        if (main) {
+          main.style.width = '70%';
+          main.style.padding = '40px';
+          main.style.boxSizing = 'border-box';
+        }
+
         const nodes = [cdoc.documentElement, cdoc.body];
         for (let n = cpage; n && n !== cdoc.body; n = n.parentElement) nodes.push(n);
         nodes.forEach(n => {
           n.style.setProperty('transform', 'none', 'important');
-          n.style.setProperty('zoom', '1', 'important');
         });
       }
     });
