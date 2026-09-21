@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Resume builder</title>
+    <link rel="stylesheet" href="builder.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@300..700&family=Scoutie+Sans:ital,wght@0,200..800;1,200..800&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+</head>
+<body>
+    <nav>
+        <h2>ResuMate</h2>
+        <a href="index.html"><h3>← Back to Home</h3></a>
+    </nav>
+    <div class="con">
+        <div class="form-c">
+        
+            <div class="form">
+                <h2 style="color: aliceblue;">Personal info</h2><hr><br>
+<input type="text" placeholder="First Name" id="fname" oninput="update()">
+<input type="text" placeholder="Last Name" id="lname" oninput="update()"><br><br>
+<input type="text" placeholder="Role" id="role" style="width: 630px;" oninput="update()"><br><br>
+<input type="email" placeholder="Email" id="email" oninput="update()">
+<input type="tel" placeholder="Phone" id="phone" oninput="update()"><br><br>
+<input type="text" placeholder="LinkedIn Url" id="linkedin" oninput="update()">
+<input type="text" placeholder="GitHub Url" id="github" oninput="update()">
+
+<h2 style="color: aliceblue;">Profile Summary</h2><hr><br>
+<textarea placeholder="Write 2-3 lines about yourself..." id="profile" oninput="update()"></textarea>
+
+<h2 style="color: aliceblue;">Education</h2><hr><br>
+<input type="text" placeholder="College or University" id="cname" style="width: 630px;" oninput="update()"><br><br>
+<input type="text" placeholder="Degree" id="Degree" oninput="update()">
+<input type="text" placeholder="Year" id="Year" oninput="update()"><br><br>
+<input type="text" placeholder="CGPA" id="cgpa" style="width: 630px;" oninput="update()">
+
+<h2 style="color: aliceblue;">Skills</h2><hr><br>
+<input type="text" placeholder="Ex. Html, Css, Java, Python" id="skills" style="width: 630px;" oninput="update()">
+
+<h2 style="color: aliceblue;">Project 1</h2><hr><br>
+<input type="text" placeholder="Name" id="p1name" style="width: 630px;" oninput="update()"><br><br>
+<input type="text" placeholder="Tech Stack" id="p1stack" style="width: 630px;" oninput="update()"><br><br>
+<textarea placeholder="Description" id="p1desc" oninput="update()"></textarea>
+
+<h2 style="color: aliceblue;">Project 2</h2><hr><br>
+<input type="text" placeholder="Name" id="p2name" style="width: 630px;" oninput="update()"><br><br>
+<input type="text" placeholder="Tech Stack" id="p2stack" style="width: 630px;" oninput="update()"><br><br>
+<textarea placeholder="Description" id="p2desc" oninput="update()"></textarea>
+
+<h2 style="color: aliceblue;">Project 3</h2><hr><br>
+<input type="text" placeholder="Name" id="p3name" style="width: 630px;" oninput="update()"><br><br>
+<input type="text" placeholder="Tech Stack" id="p3stack" style="width: 630px;" oninput="update()"><br><br>
+<textarea placeholder="Description" id="p3desc" oninput="update()"></textarea>
+
+<h2 style="color: aliceblue;">Experience</h2><hr><br>
+<input type="text" placeholder="Company" id="company" oninput="update()">
+<input type="text" placeholder="Role" id="exrole" oninput="update()">
+<input type="text" placeholder="Year" id="year" oninput="update()"><br><br>
+<textarea placeholder="Description" id="exdesc" oninput="update()"></textarea><br>
+                <div class="btn">
+                    <button onclick="printResume()">Download Pdf</button>
+                </div>
+                
+            </div>
+            <div class="preview">
+                <div class="temp-n">
+                    <a href="#" onclick="switchTpl('modern.html')"><h2>Modern</h2></a>
+                    <a href="#" onclick="switchTpl('professional.html')"><h2>Professional</h2></a>
+                    <a href="#" onclick="switchTpl('creative.html')"><h2>Creative</h2></a>
+                </div><br>
+                <h3>-----------------------------------------------------------------------------------------------------------------</h3>
+                <iframe id="preview-frame" src="modern.html"></iframe>
+            </div>
+        </div>
+    </div>
+    <script>
+function update() {
+  const doc = document.getElementById('preview-frame').contentDocument;
+  const src = document.getElementById('preview-frame').src;
+  const isCreative = src.includes('creative');
+
+  const name = document.getElementById('fname').value + ' ' + document.getElementById('lname').value;
+  const email = document.getElementById('email').value || 'email';
+  const phone = document.getElementById('phone').value || 'phone';
+  const linkedin = document.getElementById('linkedin').value || 'LinkedIn';
+  const github = document.getElementById('github').value || 'GitHub';
+  const degree = document.getElementById('Degree').value || 'Degree';
+  const year = document.getElementById('Year').value || 'Year';
+  const cgpa = document.getElementById('cgpa').value || 'CGPA';
+  const cname = document.getElementById('cname').value || 'College';
+  const skills = document.getElementById('skills').value || 'Your skills';
+
+  doc.getElementById('name').innerText = name.trim() || 'YOUR NAME';
+  doc.getElementById('role').innerText = document.getElementById('role').value || 'Your Role';
+  doc.getElementById('profile').innerText = document.getElementById('profile').value || 'Your summary';
+  doc.getElementById('exrole').innerText = document.getElementById('exrole').value || 'Role';
+  doc.getElementById('expdetail').innerText = (document.getElementById('company').value || 'Company') + ' | ' + (document.getElementById('year').value || 'Year');
+  doc.getElementById('exdesc').innerText = document.getElementById('exdesc').value || 'Description';
+  doc.getElementById('p1name').innerText = document.getElementById('p1name').value || 'Project 1';
+  doc.getElementById('p1stack').innerText = document.getElementById('p1stack').value || 'Tech Stack';
+  doc.getElementById('p1desc').innerText = document.getElementById('p1desc').value || 'Description';
+  doc.getElementById('p2name').innerText = document.getElementById('p2name').value || 'Project 2';
+  doc.getElementById('p2stack').innerText = document.getElementById('p2stack').value || 'Tech Stack';
+  doc.getElementById('p2desc').innerText = document.getElementById('p2desc').value || 'Description';
+  doc.getElementById('p3name').innerText = document.getElementById('p3name').value || 'Project 3';
+  doc.getElementById('p3stack').innerText = document.getElementById('p3stack').value || 'Tech Stack';
+  doc.getElementById('p3desc').innerText = document.getElementById('p3desc').value || 'Description';
+
+  if (isCreative) {
+    doc.getElementById('contact').innerHTML = email + '<br>' + phone + '<br>' + linkedin + '<br>' + github;
+    doc.getElementById('skills').innerHTML = skills.split(',').map(s => s.trim()).join('<br>');
+    doc.getElementById('education').innerHTML = degree + '<br>' + cname + '<br>' + year;
+    if (doc.getElementById('cname')) doc.getElementById('cname').innerText = cname;
+  } else {
+    doc.getElementById('contact').innerText = email + ' | ' + phone + ' | ' + linkedin + ' | ' + github;
+    doc.getElementById('skills').innerText = skills;
+    doc.getElementById('cname').innerText = cname;
+    doc.getElementById('education').innerText = degree + ' | ' + year + ' | ' + cgpa;
+    if (doc.getElementById('cgpa')) {
+      doc.getElementById('cgpa').innerText = 'CGPA: ' + cgpa;
+    }
+  }
+}
+
+function switchTpl(file) {
+  const frame = document.getElementById('preview-frame');
+  frame.src = file;
+  frame.onload = function() { update(); }
+}
+function findResumePage(doc) {
+  const els = ['name', 'contact', 'profile', 'education', 'skills', 'p1name', 'exdesc']
+    .map(id => doc.getElementById(id))
+    .filter(Boolean);
+  if (!els.length) return doc.body;
+
+  let common = els[0];
+  while (common !== doc.body && !els.every(el => common.contains(el))) common = common.parentElement;
+
+  const hasBg = el => {
+    const c = doc.defaultView.getComputedStyle(el).backgroundColor;
+    return c !== 'transparent' && c !== 'rgba(0, 0, 0, 0)';
+  };
+  let page = common;
+  while (page !== doc.body && !hasBg(page)) page = page.parentElement;
+  return page === doc.body ? common : page;
+}
+
+async function printResume() {
+  try {
+    const frame = document.getElementById('preview-frame');
+    const win = frame.contentWindow;
+    const doc = frame.contentDocument;
+
+    if (!win.html2canvas) {
+      await new Promise((ok, fail) => {
+        const s = doc.createElement('script');
+        s.src = 'https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js';
+        s.onload = ok;
+        s.onerror = fail;
+        doc.head.appendChild(s);
+      });
+    }
+    await doc.fonts.ready;
+    win.scrollTo(0, 0);
+
+    const canvas = await win.html2canvas(findResumePage(doc), {
+      scale: 3,
+      onclone: (cdoc, cpage) => {
+        const nodes = [cdoc.documentElement, cdoc.body];
+        for (let n = cpage; n && n !== cdoc.body; n = n.parentElement) nodes.push(n);
+        nodes.forEach(n => {
+          n.style.setProperty('transform', 'none', 'important');
+          n.style.setProperty('zoom', '1', 'important');
+        });
+      }
+    });
+
+    const pdf = new window.jspdf.jsPDF('p', 'mm', 'a4');
+    const ratio = Math.min(210 / canvas.width, 297 / canvas.height);
+    const w = canvas.width * ratio;
+    const h = canvas.height * ratio;
+    pdf.addImage(canvas.toDataURL('image/jpeg', 0.95), 'JPEG', (210 - w) / 2, 0, w, h);
+
+    const first = document.getElementById('fname').value.trim();
+    const last = document.getElementById('lname').value.trim();
+    const name = [first, last].filter(Boolean).join('_');
+    pdf.save((name ? name + '_' : '') + 'Resume.pdf');
+  } catch (err) {
+    console.error(err);
+    alert('Could not create the PDF. Press F12 and check the Console for the error.');
+  }
+}
+</script>
+</body>
+</html>
