@@ -3,11 +3,11 @@ body {
     font-family: Arial, sans-serif;
     margin: 0;
     padding: 0;
+    zoom: 0.85;
 }
 
 .resume {
-    max-width: 800px;
-    width: 100%;
+    width: 800px;
     margin: 20px auto;
     display: flex;
     background: white;
@@ -64,15 +64,5 @@ main h3 {
 main p {
     line-height: 1.6;
     word-break: break-word;
-}
-
-@media (max-width: 600px) {
-    .resume {
-        flex-direction: column;
-    }
-    aside, main {
-        width: 100%;
-        padding: 20px;
-    }
 }
 
