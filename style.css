@@ -49,9 +49,10 @@ nav {
 }
 
 h2 {
-    color: #2DD4BF;
+    color: #2563eb;
     margin: 0;
-    font-family: "Quicksand", sans-serif;
+    font-family: "Inter", sans-serif;
+    font-weight: 600;
 }
 
 section {
@@ -147,10 +148,11 @@ section {
 }
 
 #Templates h2 {
-    color: #E6EDF3;
+    color: #ffffff;
     text-align: center;
     font-size: clamp(28px, 4vw, 40px);
-    font-family: "Quicksand", sans-serif;
+    font-family: "Inter", sans-serif;
+    font-weight: 600;
     margin-bottom: 10px;
 }
 
